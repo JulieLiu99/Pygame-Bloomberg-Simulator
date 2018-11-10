@@ -1,0 +1,116 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Apr 14 00:06:54 2018
+
+@author: enshucheng
+"""
+import json
+import requests
+import pygame
+#chartSimplify = True
+#r = requests.get('https://api.iextrading.com/1.0/stock/qqq/company', params=chartSimplify)
+#print(r.url)
+#chart = r.json()
+#print(chart)
+
+def get_info():
+   print('Company Information Search')
+   symbol = input('Please enter the company symbol: ')
+#   symbol = 'amzn'
+   print('-----------------------')
+   url = 'https://api.iextrading.com/1.0/stock/'
+   url_b = '/company'
+   f_url = url + str(symbol) + url_b
+   r = requests.get(f_url)
+   r= r.json()
+   for i in r:
+       print(i+' : '+r[i])
+   print('-----------------------')
+   return r
+
+
+def get_quote():
+   print('Stock Quote Search')
+   symbol = input('Please enter the company symbol: ')
+   print('-----------------------')
+   url = 'https://api.iextrading.com/1.0/stock/'
+   url_b = '/quote'
+   f_url = url + str(symbol) + url_b
+   r = requests.get(f_url)
+   r= r.json()
+   for i in r:
+       print(i+' : '+ str(r[i]))
+   print('-----------------------')
+def get_keystats():
+   print('Stock Key Stats Search')
+   symbol = input('Please enter the company symbol: ')
+   print('-----------------------')
+   url = 'https://api.iextrading.com/1.0/stock/'
+   url_b = '/stats'
+   f_url = url + str(symbol) + url_b
+   r = requests.get(f_url)
+   r= r.json()
+   for i in r:
+       print(i+' : '+ str(r[i]))
+   print('-----------------------')
+def get_news():
+   print('Related News Search')
+   symbol = input('Please enter the company symbol: ')
+   Range = input('Please enter how many pieces of news you want to read (1-50): ')
+   print('-----------------------')
+   url = 'https://api.iextrading.com/1.0/stock/'
+   url_b = '/news/last/'
+   f_url = url + str(symbol) + url_b+Range
+   r = requests.get(f_url)
+   r= r.json()
+   for i in r:
+       for j in i:
+           print(j+' : '+ str(i[j]))
+       print('**********************')
+   print('-----------------------')
+   
+def main():
+   while True: 
+       fun = input('Enter the module you want to use (i:info, n:news, q:quote, ks:keystats): ')
+       print('\n')
+       if fun =='i':
+           get_info()
+       if fun == 'n':
+           get_news()
+       if fun == 'q':
+           get_quote()
+       if fun == 'ks':
+           get_keystats()
+       if fun == 'quit':
+           break
+
+screen = pygame.display.set_mode((1280,960))
+black = (0,0,0)
+white = (255,255,255)
+grey = (100,100,100)
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.display.quit()
+            sys.exit()
+
+#    screen.fill(black)
+    key = pygame.key.get_pressed()
+    info = get_info()
+    pygame.font.init()
+    font = pygame.font.Font(None, 36)
+    m = 10
+    for i in info:
+        key = font.render(str(i), True, white)
+        value = font.render(str(info[i]), True, white)
+        screen.blit(key,(10,50+m))
+        screen.blit(value,(150,50+m))
+        m +=20
+    pygame.display.update()
+
+
+
+
+   
+#main()
